@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from src.database import engine, Base
-from src.api.endpoints import productos
+from src.api.endpoints import categoria, productos
 
 # Genera las tablas en MySQL al arrancar si no existen 
 # (En producción real usarías Alembic para migraciones)
@@ -13,6 +13,7 @@ app = FastAPI(
 )
 
 # Incluir los endpoints separados
+app.include_router(categoria.router)
 app.include_router(productos.router)
 
 @app.get("/")

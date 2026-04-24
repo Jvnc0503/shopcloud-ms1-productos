@@ -4,7 +4,7 @@ Microservicio de catalogo e inventario para ShopCloud, construido con FastAPI, S
 
 ## Resumen
 
-Este proyecto expone una API REST para gestionar productos. En el arranque, la aplicacion crea las tablas definidas en el modelo SQLAlchemy usando `Base.metadata.create_all(bind=engine)`.
+Este proyecto expone una API REST para gestionar productos y categorias. En el arranque, la aplicacion crea las tablas definidas en el modelo SQLAlchemy usando `Base.metadata.create_all(bind=engine)`.
 
 ## Estructura actual
 
@@ -20,12 +20,16 @@ Este proyecto expone una API REST para gestionar productos. En el arranque, la a
 │   ├── main.py
 │   ├── api/
 │   │   └── endpoints/
+│   │       ├── categoria.py
 │   │       └── productos.py
 │   ├── crud/
+│   │   ├── crud_categoria.py
 │   │   └── crud_producto.py
 │   ├── models/
+│   │   ├── categoria.py
 │   │   └── producto.py
 │   └── schemas/
+│       ├── categoria.py
 │       └── producto.py
 └── test/
 ```
@@ -37,6 +41,7 @@ Este proyecto expone una API REST para gestionar productos. En el arranque, la a
 - Conexion a MySQL usando `pymysql`.
 - Configuracion por variables de entorno con `pydantic-settings`.
 - Documentacion automatica de FastAPI en `/docs` y `/redoc`.
+- CRUD de categorias y productos con relaciones entre ambos modelos.
 
 ## Requisitos
 
@@ -110,6 +115,20 @@ Respuesta:
 { "status": "ok", "service": "ms1-productos" }
 ```
 
+### Categorias
+
+- `GET /categorias/` - Lista categorias con paginacion (`skip`, `limit`).
+- `POST /categorias/` - Crea una categoria.
+- `GET /categorias/{categoria_id}` - Obtiene el detalle de una categoria.
+
+Ejemplo de payload para crear una categoria:
+
+```json
+{
+	"nombre": "Perifericos"
+}
+```
+
 ### Productos
 
 - `GET /productos/` - Lista productos con paginacion (`skip`, `limit`).
@@ -131,16 +150,16 @@ Ejemplo de payload para crear un producto:
 
 - `seed.py` esta vacio y todavia no carga datos de prueba.
 - La carpeta `test/` esta vacia y no existen pruebas automatizadas.
-- El modelo `Producto` referencia una tabla `categorias`, por lo que el esquema de categorias debe existir en la base de datos antes de insertar productos.
+- El modelo `Producto` referencia una tabla `categorias`, por lo que la base debe tener categorias creadas antes de insertar productos.
 
 ## Notas de implementacion
 
 - `src/config.py` construye `DATABASE_URL` a partir de las variables de entorno.
 - `src/database.py` crea el engine y la sesion de SQLAlchemy.
-- `src/main.py` registra el router de productos y expone un endpoint de salud.
+- `src/main.py` registra los routers de categorias y productos, ademas del endpoint de salud.
 
 ## Siguientes pasos sugeridos
 
-1. Agregar el modelo, esquema y CRUD de categorias.
-2. Crear pruebas para los endpoints principales.
-3. Implementar `seed.py` con datos iniciales.
+1. Crear pruebas para los endpoints principales de categorias y productos.
+2. Implementar `seed.py` con datos iniciales.
+3. Sustituir `Base.metadata.create_all` por migraciones con Alembic.

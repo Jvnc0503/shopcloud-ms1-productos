@@ -1,0 +1,285 @@
+openapi: 3.0.3
+info:
+  title: ShopCloud - MS1 Productos
+  version: 1.0.0
+  description: API de catálogo de productos e inventario para ShopCloud.
+servers:
+  - url: http://localhost:8001
+paths:
+  /:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Servicio disponible
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /categorias/:
+    get:
+      summary: Listar categorías
+      operationId: listarCategorias
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 100
+      responses:
+        '200':
+          description: Lista paginada de categorías
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoriaResponse'
+    post:
+      summary: Crear categoría
+      operationId: crearCategoria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaCreate'
+      responses:
+        '201':
+          description: Categoría creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaResponse'
+  /categorias/{categoria_id}:
+    get:
+      summary: Obtener categoría
+      operationId: obtenerCategoria
+      parameters:
+        - name: categoria_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Categoría encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaResponse'
+        '404':
+          description: Categoría no encontrada
+    patch:
+      summary: Actualizar parcialmente categoría
+      operationId: actualizarCategoria
+      parameters:
+        - name: categoria_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaUpdate'
+      responses:
+        '200':
+          description: Categoría actualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaResponse'
+        '404':
+          description: Categoría no encontrada
+  /productos/:
+    get:
+      summary: Listar productos
+      operationId: listarProductos
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 100
+      responses:
+        '200':
+          description: Lista paginada de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductoResponse'
+    post:
+      summary: Crear producto
+      operationId: crearProducto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoCreate'
+      responses:
+        '201':
+          description: Producto creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductoResponse'
+  /productos/{producto_id}:
+    get:
+      summary: Obtener producto
+      operationId: detalleProducto
+      parameters:
+        - name: producto_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductoResponse'
+        '404':
+          description: Producto no encontrado
+    patch:
+      summary: Actualizar stock de producto
+      operationId: actualizarProducto
+      parameters:
+        - name: producto_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductoUpdate'
+      responses:
+        '200':
+          description: Producto actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductoResponse'
+        '404':
+          description: Producto no encontrado
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        service:
+          type: string
+          example: ms1-productos
+      required:
+        - status
+        - service
+    CategoriaCreate:
+      type: object
+      properties:
+        nombre:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Perifericos
+      required:
+        - nombre
+    CategoriaUpdate:
+      type: object
+      properties:
+        nombre:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Accesorios de PC
+      required:
+        - nombre
+    CategoriaResponse:
+      allOf:
+        - $ref: '#/components/schemas/CategoriaCreate'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+          required:
+            - id
+    ProductoCreate:
+      type: object
+      properties:
+        nombre:
+          type: string
+          minLength: 2
+          maxLength: 150
+          example: Teclado mecanico
+        precio:
+          type: number
+          format: float
+          exclusiveMinimum: 0
+          example: 129.99
+        stock:
+          type: integer
+          minimum: 0
+          example: 15
+        categoria_id:
+          type: integer
+          example: 1
+      required:
+        - nombre
+        - precio
+        - categoria_id
+    ProductoUpdate:
+      type: object
+      properties:
+        stock:
+          type: integer
+          minimum: 0
+          example: 42
+      required:
+        - stock
+    ProductoResponse:
+      allOf:
+        - $ref: '#/components/schemas/ProductoCreate'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 123
+            creado_en:
+              type: string
+              format: date-time
+              example: '2026-04-24T12:34:56.789000'
+          required:
+            - id
+            - creado_en

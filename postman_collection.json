@@ -1,0 +1,192 @@
+{
+  "info": {
+    "name": "ShopCloud MS1 Productos",
+    "_postman_id": "7b8f4d8f-8f8d-4a0f-9ac4-4f7f1a8d8f21",
+    "description": "Colección para probar el microservicio MS1 Productos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "Listar categorias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categorias/?skip=0&limit=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", ""],
+              "query": [
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "100" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear categoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Perifericos\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categorias/",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener categoria",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categorias/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar categoria",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Accesorios de PC\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categorias/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["categorias", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Listar productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos/?skip=0&limit=100",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", ""],
+              "query": [
+                { "key": "skip", "value": "0" },
+                { "key": "limit", "value": "100" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Teclado mecanico\",\n  \"precio\": 129.99,\n  \"stock\": 15,\n  \"categoria_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/productos/",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener producto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar stock de producto",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 42\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/productos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["productos", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

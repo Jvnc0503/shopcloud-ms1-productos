@@ -208,3 +208,9 @@ __marimo__/
 
 # Files
 spec.pdf
+# Local test SQLite DB used by pytest
+ms1_test.db
+# Ignore any test database files
+test/*.db
+# SQLite journal/temporary files
+*.db-journal

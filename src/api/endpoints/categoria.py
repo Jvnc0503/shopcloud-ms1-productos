@@ -23,3 +23,11 @@ def obtener_categoria(categoria_id: int, db: Session = Depends(get_db)):
     if db_categoria is None:
         raise HTTPException(status_code=404, detail="Categoría no encontrada")
     return db_categoria
+
+@router.put("/{categoria_id}", response_model=CategoriaResponse)
+def actualizar_categoria(categoria_id: int, categoria_data: CategoriaCreate, db: Session = Depends(get_db)):
+    """Actualiza una categoría existente. Lanza 404 si no se encuentra."""
+    updated_categoria = crud_categoria.update_categoria(db, categoria_id, categoria_data)
+    if updated_categoria is None:
+        raise HTTPException(status_code=404, detail="Categoría no encontrada")
+    return updated_categoria

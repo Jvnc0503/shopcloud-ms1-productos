@@ -17,3 +17,13 @@ def create_categoria(db: Session, categoria: CategoriaCreate) -> Categoria:
     db.commit()
     db.refresh(db_categoria)
     return db_categoria
+
+def update_categoria(db: Session, categoria_id: int, categoria_data: CategoriaCreate) -> Categoria | None:
+    """Actualiza una categoría existente. Retorna None si no se encuentra."""
+    db_categoria = get_categoria_by_id(db, categoria_id)
+    if db_categoria is None:
+        return None
+    db_categoria.nombre = categoria_data.nombre
+    db.commit()
+    db.refresh(db_categoria)
+    return db_categoria

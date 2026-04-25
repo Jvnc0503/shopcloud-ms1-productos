@@ -22,7 +22,10 @@ def detalle_producto(producto_id: int, db: Session = Depends(get_db)):
 @router.post("/", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
 def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     """Crea un nuevo producto."""
-    return crud_producto.create_producto(db, producto)
+    try:
+        return crud_producto.create_producto(db, producto)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 @router.patch("/{producto_id}", response_model=ProductoResponse)
 def actualizar_producto(producto_id: int, producto: ProductoUpdate, db: Session = Depends(get_db)):

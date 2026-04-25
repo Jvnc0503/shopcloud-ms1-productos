@@ -68,6 +68,7 @@ cp .env.example .env
 | `DB_USER` | Usuario de MySQL | `root` |
 | `DB_PASSWORD` | Clave de MySQL | `secret_password_aqui` |
 | `DB_NAME` | Nombre de la base de datos | `shopcloud_productos` |
+| `DATABASE_URL` | Sobrescribe la cadena completa de conexión | _vacío_ |
 
 ## Ejecucion local
 
@@ -88,6 +89,44 @@ La API quedara disponible en:
 - `http://localhost:8001`
 - `http://localhost:8001/docs`
 - `http://localhost:8001/redoc`
+
+## Flujo operativo local
+
+1. Levanta MySQL en tu máquina o con Docker.
+
+```bash
+docker run -d --name shopcloud-mysql \
+	-e MYSQL_ROOT_PASSWORD=secret_password_aqui \
+	-e MYSQL_DATABASE=shopcloud_productos \
+	-p 3306:3306 \
+	mysql:8.0
+```
+
+2. Verifica que `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME` coincidan con tu entorno.
+
+3. Carga la data inicial.
+
+```bash
+python seed.py
+```
+
+4. Arranca el servicio.
+
+```bash
+uvicorn src.main:app --host 0.0.0.0 --port 8001 --reload
+```
+
+5. Valida el contrato.
+
+- Abre `http://localhost:8001/docs` para probar Swagger.
+- Importa `openapi.yml` en Postman si prefieres colecciones externas.
+- Usa `postman_collection.json` como colección de arranque.
+
+6. Ejecuta la suite de pruebas.
+
+```bash
+pytest
+```
 
 ## Ejecucion con Docker
 
@@ -151,7 +190,7 @@ Ejemplo de payload para crear un producto:
 ## Estado actual del proyecto
 
 - `seed.py` genera categorias base y productos ficticios para la carga masiva.
-- La carpeta `test/` esta vacia y no existen pruebas automatizadas.
+- La carpeta `test/` contiene pruebas automatizadas del contrato y la logica de relaciones.
 - El modelo `Producto` referencia una tabla `categorias`, por lo que la base debe tener categorias creadas antes de insertar productos.
 
 ## Notas de implementacion
@@ -162,5 +201,4 @@ Ejemplo de payload para crear un producto:
 
 ## Siguientes pasos sugeridos
 
-1. Crear pruebas para los endpoints principales de categorias y productos.
 2. Sustituir `Base.metadata.create_all` por migraciones con Alembic.

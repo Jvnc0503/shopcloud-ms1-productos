@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from src.models.categoria import Categoria
 from src.models.producto import Producto
 from src.schemas.producto import ProductoCreate, ProductoUpdate
 
@@ -12,6 +13,10 @@ def get_producto_by_id(db: Session, producto_id: int) -> Producto | None:
 
 def create_producto(db: Session, producto: ProductoCreate) -> Producto:
     """Inserta un nuevo producto en la base de datos."""
+    categoria_existente = db.query(Categoria).filter(Categoria.id == producto.categoria_id).first()
+    if categoria_existente is None:
+        raise ValueError(f"Categoría {producto.categoria_id} no encontrada")
+
     db_producto = Producto(
         nombre=producto.nombre,
         precio=producto.precio,

@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     DEBUG: bool = Field(default=False, description="Activa el modo debug de FastAPI y SQLAlchemy")
 
     # Credenciales de Base de Datos
+    DATABASE_URL_VALUE: str | None = Field(default=None, validation_alias="DATABASE_URL")
     DB_HOST: str = Field(default="127.0.0.1", description="Host de la base de datos MySQL")
     DB_PORT: int = Field(default=3306, description="Puerto de MySQL")
     DB_USER: str = Field(default="root", description="Usuario de MySQL")
@@ -33,6 +34,8 @@ class Settings(BaseSettings):
         Construye dinámicamente la cadena de conexión de SQLAlchemy.
         Usa el driver 'mysql+pymysql' que definimos en requirements.txt.
         """
+        if self.DATABASE_URL_VALUE:
+            return self.DATABASE_URL_VALUE
         return (
             f"mysql+pymysql://{self.DB_USER}:{self.DB_PASSWORD}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"

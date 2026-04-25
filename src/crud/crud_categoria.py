@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from src.models.categoria import Categoria
-from src.schemas.categoria import CategoriaCreate
+from src.schemas.categoria import CategoriaCreate, CategoriaUpdate
 
 def get_categorias(db: Session, skip: int = 0, limit: int = 100) -> list[Categoria]:
     """Obtiene una lista paginada de categorías."""
@@ -18,8 +18,8 @@ def create_categoria(db: Session, categoria: CategoriaCreate) -> Categoria:
     db.refresh(db_categoria)
     return db_categoria
 
-def update_categoria(db: Session, categoria_id: int, categoria_data: CategoriaCreate) -> Categoria | None:
-    """Actualiza una categoría existente. Retorna None si no se encuentra."""
+def update_categoria(db: Session, categoria_id: int, categoria_data: CategoriaUpdate) -> Categoria | None:
+    """Actualiza parcialmente una categoría existente. Retorna None si no se encuentra."""
     db_categoria = get_categoria_by_id(db, categoria_id)
     if db_categoria is None:
         return None

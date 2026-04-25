@@ -120,6 +120,7 @@ Respuesta:
 - `GET /categorias/` - Lista categorias con paginacion (`skip`, `limit`).
 - `POST /categorias/` - Crea una categoria.
 - `GET /categorias/{categoria_id}` - Obtiene el detalle de una categoria.
+- `PATCH /categorias/{categoria_id}` - Actualiza parcialmente una categoria.
 
 Ejemplo de payload para crear una categoria:
 
@@ -134,6 +135,7 @@ Ejemplo de payload para crear una categoria:
 - `GET /productos/` - Lista productos con paginacion (`skip`, `limit`).
 - `POST /productos/` - Crea un producto.
 - `GET /productos/{producto_id}` - Obtiene el detalle de un producto.
+- `PATCH /productos/{producto_id}` - Actualiza el stock de un producto.
 
 Ejemplo de payload para crear un producto:
 
@@ -148,7 +150,7 @@ Ejemplo de payload para crear un producto:
 
 ## Estado actual del proyecto
 
-- `seed.py` esta vacio y todavia no carga datos de prueba.
+- `seed.py` genera categorias base y productos ficticios para la carga masiva.
 - La carpeta `test/` esta vacia y no existen pruebas automatizadas.
 - El modelo `Producto` referencia una tabla `categorias`, por lo que la base debe tener categorias creadas antes de insertar productos.
 
@@ -161,5 +163,4 @@ Ejemplo de payload para crear un producto:
 ## Siguientes pasos sugeridos
 
 1. Crear pruebas para los endpoints principales de categorias y productos.
-2. Implementar `seed.py` con datos iniciales.
-3. Sustituir `Base.metadata.create_all` por migraciones con Alembic.
+2. Sustituir `Base.metadata.create_all` por migraciones con Alembic.

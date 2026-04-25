@@ -20,5 +20,5 @@ class ProductoResponse(ProductoBase):
     # Permite a Pydantic leer los objetos de SQLAlchemy
     model_config = ConfigDict(from_attributes=True)
 
-class ProductoUpdate(ProductoBase):
-    pass
+class ProductoUpdate(BaseModel):
+    stock: int = Field(..., ge=0, description="Nuevo stock del producto")

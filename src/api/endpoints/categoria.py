@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from src.database import get_db
-from src.schemas.categoria import CategoriaCreate, CategoriaResponse
+from src.schemas.categoria import CategoriaCreate, CategoriaResponse, CategoriaUpdate
 from src.crud import crud_categoria
 
 router = APIRouter(prefix="/categorias", tags=["Categorías"])
@@ -24,9 +24,9 @@ def obtener_categoria(categoria_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Categoría no encontrada")
     return db_categoria
 
-@router.put("/{categoria_id}", response_model=CategoriaResponse)
-def actualizar_categoria(categoria_id: int, categoria_data: CategoriaCreate, db: Session = Depends(get_db)):
-    """Actualiza una categoría existente. Lanza 404 si no se encuentra."""
+@router.patch("/{categoria_id}", response_model=CategoriaResponse)
+def actualizar_categoria(categoria_id: int, categoria_data: CategoriaUpdate, db: Session = Depends(get_db)):
+    """Actualiza parcialmente una categoría existente. Lanza 404 si no se encuentra."""
     updated_categoria = crud_categoria.update_categoria(db, categoria_id, categoria_data)
     if updated_categoria is None:
         raise HTTPException(status_code=404, detail="Categoría no encontrada")

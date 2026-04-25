@@ -24,9 +24,9 @@ def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     """Crea un nuevo producto."""
     return crud_producto.create_producto(db, producto)
 
-@router.put("/{producto_id}", response_model=ProductoResponse)
+@router.patch("/{producto_id}", response_model=ProductoResponse)
 def actualizar_producto(producto_id: int, producto: ProductoUpdate, db: Session = Depends(get_db)):
-    """Actualiza un producto existente. Lanza 404 si no existe."""
+    """Actualiza el stock de un producto existente. Lanza 404 si no existe."""
     db_producto = crud_producto.update_producto(db, producto_id, producto)
     if db_producto is None:
         raise HTTPException(status_code=404, detail="Producto no encontrado")

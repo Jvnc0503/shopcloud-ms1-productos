@@ -5,7 +5,7 @@ from src.schemas.producto import ProductoCreate, ProductoUpdate
 
 def get_productos(db: Session, skip: int = 0, limit: int = 100) -> list[Producto]:
     """Obtiene una lista paginada de productos."""
-    return db.query(Producto).offset(skip).limit(limit).all()
+    return db.query(Producto).order_by(Producto.id).offset(skip).limit(limit).all()
 
 def get_producto_by_id(db: Session, producto_id: int) -> Producto | None:
     """Busca un producto específico por su ID."""

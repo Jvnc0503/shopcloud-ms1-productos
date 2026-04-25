@@ -4,7 +4,7 @@ from src.schemas.categoria import CategoriaCreate, CategoriaUpdate
 
 def get_categorias(db: Session, skip: int = 0, limit: int = 100) -> list[Categoria]:
     """Obtiene una lista paginada de categorías."""
-    return db.query(Categoria).offset(skip).limit(limit).all()
+    return db.query(Categoria).order_by(Categoria.id).offset(skip).limit(limit).all()
 
 def get_categoria_by_id(db: Session, categoria_id: int) -> Categoria | None:
     """Busca una categoría específica por su ID."""

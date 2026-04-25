@@ -9,7 +9,7 @@ from __future__ import annotations
 import random
 
 from faker import Faker
-from sqlalchemy import func
+from sqlalchemy import func, insert
 
 from src.config import get_settings
 from src.database import Base, SessionLocal, engine
@@ -19,6 +19,7 @@ from src.models.producto import Producto
 
 faker = Faker("es_ES")
 settings = get_settings()
+BATCH_SIZE = 2_000
 
 
 def ensure_categorias(db) -> list[Categoria]:
@@ -52,20 +53,25 @@ def seed_productos(db, categorias: list[Categoria], total: int = 20_000) -> int:
 		return 0
 
 	categorias_ids = [categoria.id for categoria in categorias]
-	productos: list[Producto] = []
-	for _ in range(total - existentes):
-		productos.append(
-			Producto(
-				categoria_id=random.choice(categorias_ids),
-				nombre=faker.word().title(),
-				precio=round(random.uniform(5, 500), 2),
-				stock=random.randint(0, 300),
-			)
-		)
+	pendientes = total - existentes
+	stmt = insert(Producto)
 
-	db.add_all(productos)
+	while pendientes > 0:
+		lote = min(BATCH_SIZE, pendientes)
+		registros = [
+			{
+				"categoria_id": random.choice(categorias_ids),
+				"nombre": faker.word().title(),
+				"precio": round(random.uniform(5, 500), 2),
+				"stock": random.randint(0, 300),
+			}
+			for _ in range(lote)
+		]
+		db.execute(stmt, registros)
+		pendientes -= lote
+
 	db.commit()
-	return len(productos)
+	return total - existentes
 
 
 def main() -> None:

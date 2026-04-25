@@ -6,6 +6,8 @@ Microservicio de catalogo e inventario para ShopCloud, construido con FastAPI, S
 
 Este proyecto expone una API REST para gestionar productos y categorias. En el arranque, la aplicacion crea las tablas definidas en el modelo SQLAlchemy usando `Base.metadata.create_all(bind=engine)`.
 
+La suite automatizada valida el flujo principal de categorias y productos, la validacion de relaciones y la actualizacion parcial por `PATCH`.
+
 ## Estructura actual
 
 ```text
@@ -90,6 +92,12 @@ La API quedara disponible en:
 - `http://localhost:8001/docs`
 - `http://localhost:8001/redoc`
 
+Ejecuta la suite de pruebas localmente:
+
+```bash
+pytest -q
+```
+
 ## Flujo operativo local
 
 1. Levanta MySQL en tu máquina o con Docker.
@@ -110,6 +118,8 @@ docker run -d --name shopcloud-mysql \
 python seed.py
 ```
 
+El script inserta las 10 categorias base y genera 20,000 productos ficticios en lotes para reducir el tiempo de carga.
+
 4. Arranca el servicio.
 
 ```bash
@@ -127,6 +137,10 @@ uvicorn src.main:app --host 0.0.0.0 --port 8001 --reload
 ```bash
 pytest
 ```
+
+## Integracion continua
+
+El repositorio incluye un workflow de GitHub Actions en [.github/workflows/ci.yml](.github/workflows/ci.yml) que instala dependencias y ejecuta `pytest` en cada `push` y `pull_request`.
 
 ## Ejecucion con Docker
 
@@ -192,6 +206,7 @@ Ejemplo de payload para crear un producto:
 - `seed.py` genera categorias base y productos ficticios para la carga masiva.
 - La carpeta `test/` contiene pruebas automatizadas del contrato y la logica de relaciones.
 - El modelo `Producto` referencia una tabla `categorias`, por lo que la base debe tener categorias creadas antes de insertar productos.
+- Las listas de categorias y productos se entregan ordenadas por `id` para que la paginacion sea determinista.
 
 ## Notas de implementacion
 

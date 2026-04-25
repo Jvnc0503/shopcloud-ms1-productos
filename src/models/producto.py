@@ -1,19 +1,23 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from src.database import Base
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.models.categoria import Categoria
 
 class Producto(Base):
     # Nombre exacto de la tabla en MySQL
     __tablename__ = "productos"
 
     # Definición de columnas
-    id = Column(Integer, primary_key=True, index=True)
-    categoria_id = Column(Integer, ForeignKey("categorias.id"), nullable=False)
-    nombre = Column(String(150), index=True, nullable=False)
-    precio = Column(Float, nullable=False)
-    stock = Column(Integer, default=0)
-    creado_en = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    categoria_id: Mapped[int] = mapped_column(ForeignKey("categorias.id"), nullable=False)
+    nombre: Mapped[str] = mapped_column(String(150), index=True, nullable=False)
+    precio: Mapped[float] = mapped_column(Float, nullable=False)
+    stock: Mapped[int] = mapped_column(Integer, default=0)
+    creado_en: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     # Relación con la tabla categorías
-    categoria = relationship("Categoria", back_populates="productos")
+    categoria: Mapped["Categoria"] = relationship(back_populates="productos")

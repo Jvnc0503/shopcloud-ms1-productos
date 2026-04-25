@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from src.database import get_db
-from src.schemas.producto import ProductoCreate, ProductoResponse
+from src.schemas.producto import ProductoCreate, ProductoResponse, ProductoUpdate
 from src.crud import crud_producto
 
 router = APIRouter(prefix="/productos", tags=["Productos"])
@@ -11,15 +11,23 @@ def listar_productos(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     """Retorna el listado de productos con paginación."""
     return crud_producto.get_productos(db, skip=skip, limit=limit)
 
+@router.get("/{producto_id}", response_model=ProductoResponse)
+def detalle_producto(producto_id: int, db: Session = Depends(get_db)):
+    """Obtiene los detalles de un producto. Lanza 404 si no existe."""
+    db_producto = crud_producto.get_producto_by_id(db, producto_id)
+    if db_producto is None:
+        raise HTTPException(status_code=404, detail="Producto no encontrado")
+    return db_producto
+
 @router.post("/", response_model=ProductoResponse, status_code=status.HTTP_201_CREATED)
 def crear_producto(producto: ProductoCreate, db: Session = Depends(get_db)):
     """Crea un nuevo producto."""
     return crud_producto.create_producto(db, producto)
 
-@router.get("/{producto_id}", response_model=ProductoResponse)
-def detalle_producto(producto_id: int, db: Session = Depends(get_db)):
-    """Obtiene los detalles de un producto. Lanza 404 si no existe."""
-    db_producto = crud_producto.get_producto_by_id(db, producto_id)
+@router.put("/{producto_id}", response_model=ProductoResponse)
+def actualizar_producto(producto_id: int, producto: ProductoUpdate, db: Session = Depends(get_db)):
+    """Actualiza un producto existente. Lanza 404 si no existe."""
+    db_producto = crud_producto.update_producto(db, producto_id, producto)
     if db_producto is None:
         raise HTTPException(status_code=404, detail="Producto no encontrado")
     return db_producto

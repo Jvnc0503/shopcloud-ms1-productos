@@ -23,4 +23,4 @@ pydantic-settings==2.2.1  # Para cargar variables de entorno desde el archivo .e
 Faker==24.4.0             # Para generar los 20,000 registros ficticios en seed.py [cite: 201]
 cachetools>=5.3.0         # Utilidades de caching en memoria (LRU, TTL, etc.)
 pytest>=8.3.0             # Suite de pruebas automatizadas
-httpx==0.26.0             # Cliente HTTP compatible con Starlette TestClient
+httpx==0.28.1             # Cliente HTTP moderno para pruebas ASGI explícitas

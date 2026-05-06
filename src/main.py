@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from src.database import engine, Base
 from src.api.endpoints import categoria, productos
 
@@ -10,6 +11,15 @@ app = FastAPI(
     title="ShopCloud - MS1 Productos",
     description="API de catálogo de productos e inventario",
     version="1.0.0"
+)
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Incluir los endpoints separados
